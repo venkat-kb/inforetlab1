@@ -31,7 +31,6 @@ def build_index(corpus_dir):
     doc_lengths = defaultdict(float) # docID → |doc|
     N = 0 # total docs
 
-    doc_id = 1
     for filename in os.listdir(corpus_dir):
         path = os.path.join(corpus_dir, filename)
         if not os.path.isfile(path):
@@ -41,8 +40,8 @@ def build_index(corpus_dir):
             tokens = tokenize(f.read())
             freqs = Counter(tokens)
             for term, tf in freqs.items():
-                dictionary[term].append((doc_id, tf))
-        doc_id += 1
+                dictionary[term].append((filename, tf))
+
 
     for term, postings in dictionary.items(): # compute normalized lengths (lnc)
         for docID, tf in postings:
@@ -88,7 +87,7 @@ def search(query, dictionary, doc_lengths, N, top_k=10):
     ranked = sorted(scores.items(), key=lambda x: (-x[1], x[0]))
     return ranked[:top_k]
 
-def save_postings(dictionary, filepath="postings.txt"):
+def save_postings(dictionary, filepath="postings.txt"): #saving the postings as a separate text file
     with open(filepath, "w", encoding="utf-8") as f:
         for term in sorted(dictionary.keys()):
             postings = dictionary[term]
@@ -97,7 +96,7 @@ def save_postings(dictionary, filepath="postings.txt"):
             f.write(f"{term} {df} -> {postings_str}\n")
 
 
-corpus_dir = r"C:\Users\venka\Downloads\inforetlab1\Corpus"  
+corpus_dir = r"C:\Users\venka\Downloads\inforetlab1\Corpus"  #when running your code replace this with your corpus path
 dictionary, doc_lengths, N = build_index(corpus_dir)
 
 save_postings(dictionary, "postings.txt")
@@ -105,5 +104,5 @@ query = "ambitious goals"
 results = search(query, dictionary, doc_lengths, N)
 
 print("Top results for:", query)
-for docID, score in results:
-    print(f"Doc {docID}: {score:.4f}")
+output = [(docID, score) for docID, score in results]
+print(output)
