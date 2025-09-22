@@ -88,9 +88,19 @@ def search(query, dictionary, doc_lengths, N, top_k=10):
     ranked = sorted(scores.items(), key=lambda x: (-x[1], x[0]))
     return ranked[:top_k]
 
+def save_postings(dictionary, filepath="postings.txt"):
+    with open(filepath, "w", encoding="utf-8") as f:
+        for term in sorted(dictionary.keys()):
+            postings = dictionary[term]
+            df = len(postings)
+            postings_str = " -> ".join(f"({docID},{tf})" for docID, tf in postings)
+            f.write(f"{term} {df} -> {postings_str}\n")
+
+
 corpus_dir = r"C:\Users\venka\Downloads\inforetlab1\Corpus"  
 dictionary, doc_lengths, N = build_index(corpus_dir)
 
+save_postings(dictionary, "postings.txt")
 query = "ambitious goals"
 results = search(query, dictionary, doc_lengths, N)
 
