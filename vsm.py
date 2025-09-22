@@ -100,7 +100,7 @@ corpus_dir = r"C:\Users\venka\Downloads\inforetlab1\Corpus"  #when running your 
 dictionary, doc_lengths, N = build_index(corpus_dir)
 
 save_postings(dictionary, "postings.txt")
-query = "ambitious goals"
+query = "Warwickshire, came from an ancient family and was the heiress to some land"
 results = search(query, dictionary, doc_lengths, N)
 
 print("Top results for:", query)
